@@ -1,0 +1,4 @@
+*.json
+notes.txt
+*.exe
+/build

@@ -275,16 +275,17 @@ func main() {
 			itemType:      tralbum["tralbum_type"].(string),
 		}
 
-		downloadBlob, err := scrapeDownload(collectionSimplified[paymentID].redownloadUrl, &client)
-		if err != nil {
-			log.Fatalf("Error %s getting download url", err.Error())
-		}
-		album := downloadBlob["digital_items"].([]interface{})[0].(map[string]interface{})
-		link := album["downloads"].(map[string]interface{})[settings["format"].(string)].(map[string]interface{})["url"]
-		fmt.Println(link)
-		fmt.Println(collectionSimplified[paymentID].itemType)
 		albumID := collectionSimplified[paymentID].itemType + fmt.Sprint(collectionSimplified[paymentID].itemID)
 		if settings["downloads"].(map[string]interface{})[albumID] == nil {
+
+			downloadBlob, err := scrapeDownload(collectionSimplified[paymentID].redownloadUrl, &client)
+			if err != nil {
+				log.Fatalf("Error %s getting download url", err.Error())
+			}
+			album := downloadBlob["digital_items"].([]interface{})[0].(map[string]interface{})
+			link := album["downloads"].(map[string]interface{})[settings["format"].(string)].(map[string]interface{})["url"]
+			fmt.Println(link)
+			fmt.Println(collectionSimplified[paymentID].itemType)
 			fmt.Println("downloading ", album["title"].(string))
 			file, err := downloadFile(&client, link.(string), makeFileName(album["title"].(string)), collectionSimplified[paymentID].itemType)
 			if err != nil {
